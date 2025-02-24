@@ -114,7 +114,7 @@ int main(){
 ```
 </details>
 
-Observeu com, per estalviar-nos declarar inicialitzar els elements del mapa un a un (i.e. fent `romans_a_nums["I"] = 1`, `romans_a_nums["II"] = 2`, ...) hem fet un bucle on utilitzem `nums_a_romans` per inicialitzar `romans_a_nums`.
+Observeu com, per no haver d'inicialitzar els elements del mapa d'un en un (i.e. fent `romans_a_nums["I"] = 1`, `romans_a_nums["II"] = 2`, ...) hem fet un bucle on utilitzem `nums_a_romans` per inicialitzar `romans_a_nums`.
 
 
 ## [Problema Q1. Any inusual](https://jutge.org/problems/P80489) <a name="Q1"/>
