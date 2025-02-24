@@ -19,7 +19,7 @@
 En aquest problema ens donen 4 nombres enters i hem de dir si n'hi ha només un que sigui igual a la suma dels altres. Per resoldre-ho de manera senzilla, podem iterar per cada un dels nombres, comprovar si la condició es compleix, i en cas que així sigui incrementar en 1 un comptador. Al final, la resposta serà `sí` si el comptador és igual a 1.
 
 <details>
-<summary>Solució (C++)</summary>
+<summary><b>Solució (C++)</b></summary>
 
 ```cpp
 #include<bits/stdc++.h>
@@ -43,9 +43,9 @@ int main(){
 ```
 </details>
 
-Per evitar haver de recalcular la suma cada cop, podríem calcular la suma total, i utilitzar que un nombre és igual a la suma dels altres si `total - x == x`. En aquest cas això no afecta massa al temps d'execució, perquè només tenim 4 nombres, però sí que afectaria significativament per quantitats més grans.
+Per evitar haver de recalcular la suma cada cop, podríem calcular la suma total, i utilitzar que un nombre `x` és igual a la suma dels altres si es compleix que `total - x == x`. En aquest cas això no afecta massa al temps d'execució, perquè només tenim 4 nombres, però sí tinguessim $n$ nombres, això faria que el codi passes de fer $\mathcal O(n^2)$ operacions a $\mathcal O(n)$ operacions.
 <details>
-  <summary>Solució alternativa (C++)</summary>
+  <summary><b>Solució alternativa (C++)</b></summary>
   
   ```cpp
 #include<bits/stdc++.h>
@@ -71,7 +71,7 @@ int main(){
 Per acabar, una solució més concisa en Python:
 
 <details>
-  <summary>Solució (Python3)</summary>
+  <summary><b>Solució (Python3)</b></summary>
 
 ```py
 from easyinput import read
