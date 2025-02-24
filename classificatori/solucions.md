@@ -119,6 +119,34 @@ Observeu que, per no haver d'inicialitzar els elements del mapa d'un en un (i.e.
 
 ## [Problema Q1. Any inusual](https://jutge.org/problems/P80489) <a name="Q1"/>
 
+Per resoldre aquest problema hem d'iterar per tots els nombres majors a 2025 fins a trobar-ne un que compleixi la propietat. Per "partir en dos trossos" un nombre de manera senzilla, el podem convertir a `string` amb la funció `to_string()` i després utilitzar la funció `s.substr()` per seleccionar la part de la `string` que volguem. Per tornar a convertir-ho un enter, podem utilitzar la funció `stoi()`. 
+
+<details><summary><b>Codi (C++)</b></summary>
+
+```cpp
+#include<bits/stdc++.h>
+using namespace std;
+ 
+int main(){
+  for(int n = 2025; n <= 10000; ++n) {
+    string s = to_string(n);
+    int k = s.size();
+    for(int i = 1; i < k; ++i) {
+      // partim el nombre en 2 trossos:
+      // a = s[0..i-1], b = s[i..k-1]
+      string a = s.substr(0,i); // des de posició 0, longitud = i
+      string b = s.substr(i); // des de posició i, fins al final
+      int na = stoi(a);
+      int nb = stoi(b);
+      if((na + nb)*(na + nb) == n) {
+        cout <<"(" << a << " + " << b << ")^2 = " << n << endl;
+      } 
+    }
+  }
+}
+```
+</details>
+
 ## [Problema C3. Xifratge de Vigenère](https://jutge.org/problems/P51849) <a name="C3"/>
 
 ## [Problema G1. Art decimal](https://jutge.org/problems/P43122) <a name="G1"/>
