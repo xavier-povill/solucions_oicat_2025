@@ -43,7 +43,7 @@ int main(){
 ```
 </details>
 
-Per evitar haver de recalcular la suma cada cop, podríem calcular la suma total, i utilitzar que un nombre `x` és igual a la suma dels altres si es compleix que `total - x == x`. En aquest cas això no afecta massa al temps d'execució, perquè només tenim 4 nombres, però sí tinguessim $n$ nombres, això faria que el codi passes de fer $\mathcal O(n^2)$ operacions a $\mathcal O(n)$ operacions.
+Per evitar haver de recalcular la suma cada cop, podríem calcular la suma total, i utilitzar que un nombre `x` és igual a la suma dels altres si es compleix que `total - x == x`. En aquest cas això no afecta massa al temps d'execució, perquè només tenim 4 nombres, però si tinguessim $n$ nombres, això faria que el codi passés de fer $\mathcal O(n^2)$ operacions a $\mathcal O(n)$ operacions.
 <details>
   <summary><b>Solució alternativa (C++)</b></summary>
   
@@ -86,6 +86,36 @@ Observeu que al fer `ans = [sum(v)-x == x for x in v]` estem creant una llista d
 
 
 ## [Problema C2. Sumant en romà](https://jutge.org/problems/P71583) <a name="C2"/>
+
+En aquest problema ens demanen calcular la suma de dos nombres romans. Per resoldre-ho, podem implementar una funció que ens passi de nombres romans (donats com una `string`) a nombres "normals" i una altra funció que ens passi de nombres "normals" a nombres romans.
+
+Hi ha moltes maneres de fer-ho. Per exemple, podem implementar la primera amb un `map<string,int>`, i la segona amb un `vector<string>` (on a la posició $n$-èssima hi guardem el nombre romà corresponent a `n`).
+
+<details>
+  <summary><b>Codi (C++)</b></summary>
+
+```cpp
+#include<bits/stdc++.h>
+using namespace std;
+ 
+int main(){
+  vector<string> nums_a_romans = {"?", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII", "XIII", "XIV", "XV", "XVI", "XVII", "XVIII", "XIX", "XX"};
+  map<string,int> romans_a_nums;
+  for(int i = 0; i < int(nums_a_romans.size()); ++i) {
+    romans_a_nums[nums_a_romans[i]] = i;
+  }
+
+  string a, b;
+  while(cin >> a >> b >> b) {
+    int suma = romans_a_nums[a] + romans_a_nums[b];
+    cout << a << " + " << b << " = " << nums_a_romans[suma] << endl;
+  }
+}
+```
+</details>
+
+Observeu com, per estalviar-nos declarar inicialitzar els elements del mapa un a un (i.e. fent `romans_a_nums["I"] = 1`, `romans_a_nums["II"] = 2`, ...) hem fet un bucle on utilitzem `nums_a_romans` per inicialitzar `romans_a_nums`.
+
 
 ## [Problema Q1. Any inusual](https://jutge.org/problems/P80489) <a name="Q1"/>
 
