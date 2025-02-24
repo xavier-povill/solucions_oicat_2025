@@ -16,6 +16,75 @@
 
 ## [Problema C1. Només un igual a la suma dels altres](https://jutge.org/problems/P20891) <a name="C1"/>
 
+En aquest problema ens donen 4 nombres enters i hem de dir si n'hi ha només un que sigui igual a la suma dels altres. Per resoldre-ho de manera senzilla, podem iterar per cada un dels nombres, comprovar si la condició es compleix, i en cas que així sigui incrementar en 1 un comptador. Al final, la resposta serà `sí` si el comptador és igual a 1.
+
+<details>
+<summary>Solució (C++)</summary>
+
+```cpp
+#include<bits/stdc++.h>
+using namespace std;
+ 
+int main(){
+  vector<int> v(4);
+  for(int i = 0; i < 4; ++i)
+    cin >> v[i];
+
+  int count = 0;
+  for(int i = 0; i < 4; ++i) {
+    int suma = 0;
+    for(int j = 0; j < 4; ++j) {
+      if(i != j) suma += v[j];
+    }
+    if(suma == v[i]) count++;
+  }
+  cout << (count == 1 ? "si" : "no") << endl;
+}
+```
+</details>
+
+Per evitar haver de recalcular la suma cada cop, podríem calcular la suma total, i utilitzar que un nombre és igual a la suma dels altres si `total - x == x`. En aquest cas això no afecta massa al temps d'execució, perquè només tenim 4 nombres, però sí que afectaria significativament per quantitats més grans.
+<details>
+  <summary>Solució alternativa (C++)</summary>
+  
+  ```cpp
+#include<bits/stdc++.h>
+using namespace std;
+ 
+int main(){
+  vector<int> v(4);
+  int suma = 0;
+  for(int i = 0; i < 4; ++i) {
+    cin >> v[i];
+    suma += v[i];
+  }
+
+  int count = 0;
+  for(int i = 0; i < 4; ++i) {
+    if(suma - v[i] == v[i]) count++;
+  }
+  cout << (count == 1 ? "si" : "no") << endl;
+}
+  ```
+</details>
+
+Per acabar, una solució més concisa en Python:
+
+<details>
+  <summary>Solució (Python3)</summary>
+
+```py
+from easyinput import read
+
+v = [read(int) for _ in range(4)]
+ans = [sum(v)-x == x for x in v]
+print("si" if sum(ans) == 1 else "no")
+```
+</details>
+
+Observeu que al fer `ans = [sum(v)-x == x for x in v]` estem creant una llista de variables booleanes (és a dir, `True` / `False`) i al fer `sum(ans)` els valors de `True` es converteixen a `1` i els valors de `False` es converteixen a `0`. Així doncs, `sum(ans) == 1` equival a dir que només hi ha un `x` en `v` tal que `sum(v)-x == x`.
+
+
 ## [Problema C2. Sumant en romà](https://jutge.org/problems/P71583) <a name="C2"/>
 
 ## [Problema Q1. Any inusual](https://jutge.org/problems/P80489) <a name="Q1"/>
