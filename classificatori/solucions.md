@@ -19,7 +19,7 @@
 En aquest problema ens donen 4 nombres enters i hem de dir si n'hi ha només un que sigui igual a la suma dels altres. Per resoldre-ho de manera senzilla, podem iterar per cada un dels nombres, comprovar si la condició es compleix, i en cas que així sigui incrementar en 1 un comptador. Al final, la resposta serà `sí` si el comptador és igual a 1.
 
 <details>
-<summary><b>Solució (C++)</b></summary>
+<summary><b>Codi (C++)</b></summary>
 
 ```cpp
 #include<bits/stdc++.h>
@@ -45,7 +45,7 @@ int main(){
 
 Per evitar haver de recalcular la suma cada cop, podríem calcular la suma total, i utilitzar que un nombre `x` és igual a la suma dels altres si es compleix que `total - x == x`. En aquest cas això no afecta massa al temps d'execució, perquè només tenim 4 nombres, però si tinguessim $n$ nombres, això faria que el codi passés de fer $\mathcal O(n^2)$ operacions a $\mathcal O(n)$ operacions.
 <details>
-  <summary><b>Solució alternativa (C++)</b></summary>
+  <summary><b>Codi alternatiu (C++)</b></summary>
   
   ```cpp
 #include<bits/stdc++.h>
@@ -71,7 +71,7 @@ int main(){
 Per acabar, una solució més concisa en Python:
 
 <details>
-  <summary><b>Solució (Python3)</b></summary>
+  <summary><b>Codi (Python3)</b></summary>
 
 ```py
 from easyinput import read
@@ -87,7 +87,7 @@ Observeu que al fer `ans = [sum(v)-x == x for x in v]` estem creant una llista d
 
 ## [Problema C2. Sumant en romà](https://jutge.org/problems/P71583) <a name="C2"/>
 
-En aquest problema ens demanen calcular la suma de dos nombres romans. Per resoldre-ho, podem implementar una funció que ens passi de nombres romans (donats com una `string`) a nombres "normals" i una altra funció que ens passi de nombres "normals" a nombres romans.
+En aquest problema ens demanen calcular la suma de dos nombres romans. Per resoldre-ho, necessitem implementar una funció que ens passi de nombres romans (donats com una `string`) a nombres "normals" i una altra funció que ens passi de nombres "normals" a nombres romans.
 
 Hi ha moltes maneres de fer-ho. Per exemple, podem implementar la primera amb un `map<string,int>`, i la segona amb un `vector<string>` (on a la posició $n$-èssima hi guardem el nombre romà corresponent a `n`).
 
@@ -114,7 +114,7 @@ int main(){
 ```
 </details>
 
-Observeu com, per no haver d'inicialitzar els elements del mapa d'un en un (i.e. fent `romans_a_nums["I"] = 1`, `romans_a_nums["II"] = 2`, ...) hem fet un bucle on utilitzem `nums_a_romans` per inicialitzar `romans_a_nums`.
+Observeu que, per no haver d'inicialitzar els elements del mapa d'un en un (i.e. fent `romans_a_nums["I"] = 1`, `romans_a_nums["II"] = 2`, ...), hem fet un bucle on utilitzem `nums_a_romans` per inicialitzar `romans_a_nums`.
 
 
 ## [Problema Q1. Any inusual](https://jutge.org/problems/P80489) <a name="Q1"/>
