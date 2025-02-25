@@ -149,7 +149,7 @@ int main(){
 
 ## [Problema C3. Xifratge de Vigenère](https://jutge.org/problems/P51849) <a name="C3"/>
 
-Aquest problema està basat en un mètode de xifratge real, que es va utilitzar en diferents variants al llarg de l'Edat Moderna i fins i tot a la Guerra Civil Americana <a href=https://ca.wikipedia.org/wiki/Xifratge_de_Vigen%C3%A8re />.
+Aquest problema està basat en un mètode de xifratge real, que es va utilitzar en diferents variants al llarg de l'Edat Moderna i fins i tot a la Guerra Civil Americana (<a href=https://ca.wikipedia.org/wiki/Xifratge_de_Vigen%C3%A8re>enllaç</a>).
 
 Per resoldre'l, va bé saber que C++ ens permet operar amb els caràcters com si fossin enters. Per exemple, `ìnt('c'-'a')` retorna `2`, ja que la lletra `'c'` està 2 posicions per davant de la `'a'`, i de la mateixa manera `char('a' + 2)` ens retorna `'c'`. Així doncs, per xifrar el caràcter `x` amb el caràcter `y` podem fer `y += (x - 'a')`. El problema és que aleshores ens podem passar de llarg, així que hem de restar-li `'a'`, prendre mòdul per la mida de l'alfabet, i tornar-li a sumar `'a'`. Al final obtenim la implementació següent:
 
