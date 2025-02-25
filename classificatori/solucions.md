@@ -119,7 +119,7 @@ Observeu que, per no haver d'inicialitzar els elements del mapa d'un en un (i.e.
 
 ## [Problema Q1. Any inusual](https://jutge.org/problems/P80489) <a name="Q1"/>
 
-Per resoldre aquest problema hem d'iterar per tots els nombres majors a 2025 fins a trobar-ne un que compleixi la propietat. Per "partir en dos trossos" un nombre de manera senzilla, el podem convertir a `string` amb la funció `to_string()` i després utilitzar la funció `s.substr()` per seleccionar la part de la `string` que volguem. Per tornar a convertir-ho un enter, podem utilitzar la funció `stoi()`. 
+Per resoldre aquest problema hem d'iterar per tots els nombres majors a 2025 fins a trobar-ne un que compleixi la propietat. Per "partir en dos trossos" un nombre de manera senzilla, el podem convertir a `string` amb la funció `to_string()` i després utilitzar la funció `s.substr()` per seleccionar la part de la `string` que volguem. Al final, per tornar a convertir-ho a un enter, utilitzem la funció `stoi()`. 
 
 <details><summary><b>Codi (C++)</b></summary>
 
@@ -149,7 +149,38 @@ int main(){
 
 ## [Problema C3. Xifratge de Vigenère](https://jutge.org/problems/P51849) <a name="C3"/>
 
+Aquest problema està basat en un mètode de xifratge real, que es va utilitzar en diferents variants al llarg de l'Edat Moderna i fins i tot a la Guerra Civil Americana <a href=https://ca.wikipedia.org/wiki/Xifratge_de_Vigen%C3%A8re />.
+
+Per resoldre'l, va bé saber que C++ ens permet operar amb els caràcters com si fossin enters. Per exemple, `ìnt('c'-'a')` retorna `2`, ja que la lletra `'c'` està 2 posicions per davant de la `'a'`, i de la mateixa manera `char('a' + 2)` ens retorna `'c'`. Així doncs, per xifrar el caràcter `x` amb el caràcter `y` podem fer `y += (x - 'a')`. El problema és que aleshores ens podem passar de llarg, així que hem de restar-li `'a'`, prendre mòdul per la mida de l'alfabet, i tornar-li a sumar `'a'`. Al final obtenim la implementació següent:
+
+<details><summary><b>Codi (C++)</b></summary>
+
+```cpp
+#include<bits/stdc++.h>
+using namespace std;
+ 
+int main() {
+  string s, t;
+  while(cin >> s >> t) {
+    int n = s.size();
+    int m = t.size();
+    for(int i = 0; i < m; ++i) {
+      if(t[i] == '_') cout << " ";
+      else {
+        int x = t[i] - 'a' + s[i%n] - 'a';
+        x %= 26;
+        cout << char('a' + x);
+      }
+    }
+    cout << endl;
+  }
+}
+```
+</details>
+
 ## [Problema G1. Art decimal](https://jutge.org/problems/P43122) <a name="G1"/>
+
+
 
 ## [Problema C4. Trobada de religiosos](https://jutge.org/problems/P41094) <a name="C4"/>
 
