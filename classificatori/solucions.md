@@ -254,6 +254,35 @@ int main() {
 
 ## [Problema G2. Dissenyant estovalles](https://jutge.org/problems/P28763) <a name="G2"/>
 
+<details><summary><b>Codi (Python3)</b></summary>
+
+```py
+from PIL import Image, ImageDraw
+from easyinput import read
+
+m, n = read(int, int)
+img = Image.new('RGB', (m, n), 'Black')
+dib = ImageDraw.Draw(img)
+
+k = read(int)
+color_vertical = [[0, 0, 0] for _ in range(m)]
+color_horitzontal = [[0, 0, 0] for _ in range(n)]
+for _ in range(k):
+  tipus, e, d, r, g, b = read(chr, int, int, int, int, int)
+  color = color_vertical if tipus == 'V' else color_horitzontal
+  for x in range(e, d+1):
+    color[x] = [sum(z) for z in zip(color[x], [r, g, b])]
+
+for x in range(m):
+  for y in range(n):
+    color = map(lambda z : min(z, 255), map(sum, zip(color_vertical[x], color_horitzontal[y])))
+    dib.point((x, y), tuple(color))
+
+
+img.save('output.png')
+```
+</details>
+
 ## [Problema C5. Saltant amunt](https://jutge.org/problems/P57741) <a name="C5"/>
 
 ## [Problema C6. Camins màxims en un graf](https://jutge.org/problems/P51388) <a name="C6"/>
