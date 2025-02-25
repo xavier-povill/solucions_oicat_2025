@@ -206,6 +206,50 @@ img.save('output.png')
 
 ## [Problema C4. Trobada de religiosos](https://jutge.org/problems/P41094) <a name="C4"/>
 
+<details> <summary><b>Codi (C++)</b></summary>
+
+```cpp
+#include<bits/stdc++.h>
+using namespace std;
+ 
+int main() {
+  char tipus;
+  vector<queue<string>> v(3);
+  string const rangs = "mbc";
+  while(cin >> tipus and tipus != 'f') {
+    if(tipus == 's') {
+      bool fet = false;
+      for(int i = 2; i >= 0 and not fet; --i) {
+        if(not v[i].empty()) {
+          cout << v[i].front() << endl;
+          v[i].pop();
+          fet = true;
+        }
+      }
+      if(not fet) cout << "ERROR" << endl;
+    }
+    else {
+      string nom;
+      char rang;
+      cin >> nom >> rang;
+      for(int i = 0; i < 3; ++i) {
+        if(rang == rangs[i]) {
+          v[i].push(nom);
+        }
+      }
+    }
+  }
+  cout << string(10, '-') << endl;
+  for(int i = 2; i >= 0; --i) {
+    while(not v[i].empty()) {
+      cout << v[i].front() << endl;
+      v[i].pop();
+    }
+  }
+}
+```
+</details>
+
 ## [Problema Q2. Graf especial](https://jutge.org/problems/P78645) <a name="Q2"/>
 
 ## [Problema G2. Dissenyant estovalles](https://jutge.org/problems/P28763) <a name="G2"/>
