@@ -180,7 +180,29 @@ int main() {
 
 ## [Problema G1. Art decimal](https://jutge.org/problems/P43122) <a name="G1"/>
 
+<details><summary><b>Codi (Python3)</b></summary>
 
+```py
+from PIL import Image, ImageDraw
+from easyinput import read
+
+m, n = read(int, int)
+colors = [read(str) for _ in range(10)]
+a, b = read(int, int)
+
+img = Image.new('RGB', (m, n), 'White')
+dib = ImageDraw.Draw(img)
+
+for y in range(n):
+  for x in range(m):
+    a *= 10
+    digit = a // b
+    a %= b
+    dib.point((x, y), colors[digit])
+
+img.save('output.png')
+```
+</details>
 
 ## [Problema C4. Trobada de religiosos](https://jutge.org/problems/P41094) <a name="C4"/>
 
