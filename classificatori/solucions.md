@@ -252,6 +252,12 @@ int main() {
 
 ## [Problema Q2. Graf especial](https://jutge.org/problems/P78645) <a name="Q2"/>
 
+<details><summary><b>Codi (C++)</b></summary>
+
+```cpp
+```
+</details>
+
 ## [Problema G2. Dissenyant estovalles](https://jutge.org/problems/P28763) <a name="G2"/>
 
 <details><summary><b>Codi (Python3)</b></summary>
@@ -285,7 +291,54 @@ img.save('output.png')
 
 ## [Problema C5. Saltant amunt](https://jutge.org/problems/P57741) <a name="C5"/>
 
+<details><summary><b>Codi (C++)</b></summary>
+
+```cpp
+#include<bits/stdc++.h>
+using namespace std; 
+ 
+int main(){
+  int s, n;
+  while(cin >> s >> n) {
+    vector<int> cost(n);
+    for(int& x : cost) 
+      cin >> x;
+    cost.push_back(0); // Afegim un esglaó extra al final de cost 0, per simplificar el càlcul de la DP.
+
+    int const INF = 1e9;
+    // dp[i][j] := minim cost per arribar a l'esglaó i-èssim, on a l'últim pas hem saltat j esglaons.
+    vector<vector<int>> dp(n+1, vector<int>(s+1, INF));
+    // Podem suposar que al principi venim d'un salt de mida 1, ja que llavors al proper podem saltar
+    // qualsevol longitud des de 1 fins a s.
+    dp[0][1] = cost[0];
+    for(int i = 1; i <= n; ++i) {
+      for(int last = 1; last <= s; ++last) {
+        for(int salt = 1; salt <= min(i, s + 1 - last); ++salt) {
+          dp[i][salt] = min(dp[i][salt], dp[i - salt][last] + cost[i]);
+        }
+      }
+    }
+    int ans = INF;
+    for(int salt = 1; salt <= s; ++salt)
+      ans = min(ans, dp[n][salt]);
+    cout << ans << endl;
+  }
+}
+```
+</details>
+
 ## [Problema C6. Camins màxims en un graf](https://jutge.org/problems/P51388) <a name="C6"/>
+
+<details><summary><b>Codi (C++)</b></summary>
+
+```cpp
+```
+</details>
 
 ## [Problema C7. Estacions de radar](https://jutge.org/problems/P45007) <a name="C7"/>
 
+<details><summary><b>Codi (C++)</b></summary>
+
+```cpp
+```
+</details>
