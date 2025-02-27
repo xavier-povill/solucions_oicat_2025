@@ -329,9 +329,124 @@ int main(){
 
 ## [Problema C6. Camins màxims en un graf](https://jutge.org/problems/P51388) <a name="C6"/>
 
+<details><summary><b>Codi - Solució parcial (C++)</b></summary>
+
+```cpp
+#include<bits/stdc++.h>
+using namespace std;
+
+int main() {
+    int n, m;
+    while(cin >> n >> m) {
+        vector<vector<int>> G(n);
+        while(m--) {
+            int a, b;
+            cin >> a >> b;
+            G[a].push_back(b);
+            G[b].push_back(a);
+        }
+        vector<bool> vist(n);
+
+        function<int(int)> DFS = [&](int v) {
+            vist[v] = true;
+            int ans = 0;
+            for(int u : G[v]) {
+                if(not vist[u]) {
+                    ans = max(ans, 1 + DFS(u));
+                }
+            }
+            return ans;
+        };
+
+        for(int v = 0; v < n; ++v) {
+            fill(vist.begin(), vist.end(), false);
+            int ans = DFS(v);
+            cout << ans;
+            cout << (v == n-1? '\n' : ' ');
+        }
+    }
+}
+```
+</details>
+
 <details><summary><b>Codi (C++)</b></summary>
 
 ```cpp
+#include<bits/stdc++.h>
+using namespace std;
+
+int main(){
+    cin.tie(NULL);
+    ios_base::sync_with_stdio(false);
+    int n, m;
+    while(cin >> n >> m) {
+        vector<vector<int>> G(n);
+        while(m--) {
+            int u, v;
+            cin >> u >> v;
+            G[u].push_back(v);
+            G[v].push_back(u);
+        }
+
+        // dist_fill[v] := distància més gran que podem aconseguir anant cap a un fill de v
+        vector<int> dist_fill(n, 0); 
+        
+        // millor_fill[v] := fill que assoleix dist_fill[v]         
+        vector<int> millor_fill(n, -1); 
+        
+        // segon_dist_fill[v] := distància més gran que podem aconseguir anant cap a un fill
+        //                       de v diferent de millor_fill[v]
+        vector<int> segon_dist_fill(n, 0);            
+        vector<int> pare(n, -1); // pare[v] := pare de v en l'arbre
+        vector<bool> vist(n, false); // vist[v] := true si ja hem visitat el vèrtex v
+
+        // Calcula els valors de dist_fill[v] i segon_dist_fill[v]
+        function<void(int)> DFS_Down = [&](int v) {
+            vist[v] = true;
+            for(int u : G[v]) {
+                if(u == pare[v]) continue;
+                pare[u] = v;
+                DFS_Down(u);
+                if(dist_fill[v] < dist_fill[u] + 1) {
+                    segon_dist_fill[v] = dist_fill[v];
+                    dist_fill[v] = dist_fill[u] + 1;
+                    millor_fill[v] = u;
+                }
+                else if(segon_dist_fill[v] < dist_fill[u] + 1) {
+                    segon_dist_fill[v] = dist_fill[u] + 1;
+                }
+            }
+        };
+
+        for(int i = 0; i < n; ++i) {
+            if(not vist[i])
+                DFS_Down(i);
+        }
+
+        // dist_pare[v] := distància més gran que podem aconseguir anant cap al pare de v
+        vector<int> dist_pare(n, 0); 
+
+        // Calcula el valor de dist_pare[v]
+        function<void(int)> DFS_Up = [&](int v) {
+            vist[v] = true;
+            if(pare[v] == -1) return;
+            if(not vist[pare[v]])
+                DFS_Up(pare[v]);
+            dist_pare[v] = 1 + max(dist_pare[pare[v]], (millor_fill[pare[v]] == v? segon_dist_fill[pare[v]] : dist_fill[pare[v]]));
+        };
+
+        vist = vector<bool>(n, false);
+        for(int i = 0; i < n; ++i) {
+            if(not vist[i])
+                DFS_Up(i);
+        }
+        for(int i = 0; i < n; ++i) {
+            if(i) cout << ' ';
+            cout << max(dist_fill[i], dist_pare[i]);
+        }
+        cout << endl;
+    }
+}
 ```
 </details>
 
