@@ -255,6 +255,96 @@ int main() {
 <details><summary><b>Codi (C++)</b></summary>
 
 ```cpp
+#include<bits/stdc++.h>
+using namespace std;
+
+int main() {
+    int n = 7; // nombre de vèrtexs
+    int m = n * (n-1) / 2; // nombre màxim d'arestes
+    vector<int> best_deg(n, 0); // millor seqüència de graus trobada fins ara
+    int best_mask = 0; // graf que assoleix la millor seqüència de graus
+    vector<bool> vist(n);
+    for(int mask = 0; mask < 1<<m; ++mask) {
+        // El bit i-èssim de la representació binària de 'mask' ens diu si la
+        // aresta i-èssima està present al graf (ordenant les arestes primer 
+        // segons el vèrtex més petit, i després segons el vèrtex més gran).
+        if(mask%10000 == 0) 
+            cout << mask*100 / (1 << m)  << "\% completat" << endl;
+        bool invalid = false;
+
+        // Construim el graf.
+        vector<vector<int>> G(n); // graf actual
+        vector<int> deg(n, 0); // seqüència de graus de G
+        int b = 0; // índex de la següent aresta a processar
+        for(int i = 0; i < n and not invalid; ++i) {
+            for(int j = i + 1; j < n and not invalid; ++j) {
+                if((1 << b)&mask) {
+                    // afegim aresta i <-> j
+                    G[i].push_back(j);
+                    G[j].push_back(i);
+                    deg[i]++;
+                    deg[j]++;
+                }
+                ++b;
+
+                // només considerem els grafs amb seqüència de graus decreixent
+                // (així ens estalviem de comprovar grafs que són equivalents a
+                //  grafs que ja hem vist, reordenant els vèrtexos)
+                if(i and deg[i] > deg[i-1]) invalid = true;
+            }
+        }
+
+        // v := vèrtex que estem processant actualment
+        // len := longitud del camí que portem (en nombre d'arestes)
+        // inici := vèrtex on hem començat el camí
+        function<void(int,int,int)> BuscaCicle = [&](int v, int len, int inici) {
+            if(invalid) return;
+            if(len == 5) {
+                // mirem 
+                for(int u : G[v]) {
+                    if(u == inici) {
+                        // podem completar un cicle de longitud 6
+                        invalid = true;
+                    }
+                }
+                return;
+            }
+            vist[v] = true;
+            for(int u : G[v]) {
+                if(not vist[u]) {
+                    // provem d'ampliar el camí anant cap a 'u'
+                    BuscaCicle(u, len + 1, inici);
+                    
+                    // desmarquem 'u' com a visitat, abans de provar el següent vèrtex
+                    vist[u] = false;
+                }
+            }
+        };
+
+        fill(vist.begin(), vist.end(), false); // marquem tots els vèrtexos com a no visitats.
+        BuscaCicle(0, 0, 0); // Busquem cicles que comencin pel vèrtex 0.
+        fill(vist.begin(), vist.end(), false); // marquem tots els vèrtexos com a no visitats.
+        BuscaCicle(1, 0, 1); // Busquem cicles que comencin pel vèrtex 1.
+        if(not invalid and deg > best_deg) {
+            best_deg = deg;
+            best_mask = mask;
+        }
+    }   
+
+    cout << endl << endl << " solucio: ";
+    for(int x : best_deg) 
+        cout << x << " ";
+    cout << endl << endl;
+    cout << "graf:" << endl;
+    int b = 0;
+    for(int i = 0; i < n; ++i) {
+        for(int j = i + 1; j < n; ++j) {
+            if((1<<b)&best_mask)
+                cout << i << " - " << j << endl;
+            ++b;
+        }
+    }
+}
 ```
 </details>
 
