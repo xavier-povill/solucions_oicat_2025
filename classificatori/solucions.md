@@ -300,10 +300,9 @@ int main() {
         function<void(int,int,int)> BuscaCicle = [&](int v, int len, int inici) {
             if(invalid) return;
             if(len == 5) {
-                // mirem 
+                // mirem si podem completar el cicle tornant a l'inici.
                 for(int u : G[v]) {
                     if(u == inici) {
-                        // podem completar un cicle de longitud 6
                         invalid = true;
                     }
                 }
@@ -545,5 +544,75 @@ int main(){
 <details><summary><b>Codi (C++)</b></summary>
 
 ```cpp
+#include <bits/stdc++.h>
+using namespace std;
+
+using ll = long long;
+
+struct Punt {
+    int x, y;
+    Punt operator-(Punt const& other) const {
+        return Punt{x - other.x, y - other.y};
+    }
+    Punt Rota90Horari() const {
+        return Punt{y, -x};
+    }
+};
+
+ll CrossProduct(Punt const& p, Punt const& q) {
+    return ll(p.x) * q.y - ll(p.y) * q.x;
+}
+
+// Retorna true si Angle(p) es troba entre [0, 180) graus.
+// (En cas que p == (0,0), retorna true).
+bool Up (Punt p) {
+  return p.y > 0 or (p.y == 0 and p.x >= 0);
+}
+
+// Retorna true si Angle(a) < Angle(b), ordenant els angles en l'interval [-180, 180).
+bool Compara(Punt a, Punt b){
+    if (Up(a) == Up(b)) 
+        return CrossProduct(a, b) > 0;
+    return Up(a) < Up(b);    
+}
+
+// Retorna true si l'angle des de p fins a q en sentit antihorari és menor de 90 graus.
+bool AngleMenysDe90(Punt const& p, Punt const& q) {
+    return CrossProduct(p, q) > 0 and CrossProduct(q.Rota90Horari(), p) > 0;
+}
+
+int main() {
+    int n;
+    while(cin >> n) {
+        vector<Punt> points(n);
+        for (int i = 0; i < n; ++i) 
+            cin >> points[i].x >> points[i].y;
+
+        ll total_triangles = ll(n) * (n - 1) * (n - 2) / 6;
+        ll angles_bons = 0; // nombre de angles < 90 graus
+
+        for (int i = 0; i < n; ++i){
+            vector<Punt> v; // vectors entre el punt i-èssim i la resta de punts.
+            for (int j = 0; j < n; ++j){
+                if (i != j) 
+                    v.push_back(points[j] - points[i]);
+            }
+            sort(v.begin(), v.end(), Compara);  // ordenem els vectors per angle.
+
+            int m = v.size();
+            int k = 1; // primer index tal que l'angle entre v[j] i v[k] es >= 90 graus.
+            for(int j = 0; j < m; ++j) {
+                k = max(k, j + 1);
+                while(k%m != j and AngleMenysDe90(v[j], v[k%m])) {
+                    ++k;
+                }
+                angles_bons += k - j - 1;
+            }
+        }
+        // angles_bons = 3 * triangles_acutangles + 2 * (total_triangles - triangles_acutangles)
+        // ==>  triangles_acutangles = angles_bons - 2 * total_triangles
+        cout << angles_bons - 2 * total_triangles << endl;
+    }
+}
 ```
 </details>
