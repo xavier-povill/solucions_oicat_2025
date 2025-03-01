@@ -180,6 +180,8 @@ int main() {
 
 ## [Problema G1. Art decimal](https://jutge.org/problems/P43122) <a name="G1"/>
 
+En aquest problema ens demanen representar els decimals d'una fracció amb diferents colors. La clau és que si treballem amb nombres de coma flotant (és a dir, si calculem `a/b`) no obtindrem un resultat prou precís com per poder resoldre correctament els casos grans. Així doncs, hem de treballar només amb enters, utilitzant l'algorisme habitual de divisió per anar trobant els dígits un a un. 
+
 <details><summary><b>Codi (Python3)</b></summary>
 
 ```py
@@ -205,6 +207,12 @@ img.save('output.png')
 </details>
 
 ## [Problema C4. Trobada de religiosos](https://jutge.org/problems/P41094) <a name="C4"/>
+
+Per resoldre aquest problema cal adonar-se que tot i que estigui formulat en termes d'una única cua, on els religiosos s'ordenen depenent del seu rang, en realitat això és equivalent a tenir 3 cues diferents, una per cada tipus de religiós.
+
+Així doncs, mantenim una cua per cada un dels 3 tipus de religiós i cada cop que arriba una nova persona l'afegim a la cua que pertoqui. Quan marxa una persona, busquem quina és la primera cua no buida (de major a menor rang) i n'extreiem el primer element.
+
+Per implementar-ho, podem utilitzar l'estructura `std::queue`, que té una operació `pop()`, que extreu el primer element de la cua, i una operació `push()`, que afegeix un element al final de la cua. Aquestes dues operacions triguen $\mathcal O(1)$ cadascuna, així que la complexitat total serà $\mathcal O(n)$.
 
 <details> <summary><b>Codi (C++)</b></summary>
 
@@ -249,6 +257,10 @@ int main() {
 }
 ```
 </details>
+
+Existeix una solució alternativa utilitzant una estructura de dades més complexa que es coneix com a *cua de prioritat* (a C++, `std::priority_queue`). Aquesta estructura té també una operació `push()`, que afegeix un element a la cua, i una operació `pop()`, que extreu l'element més gran que hi hagi a la cua (sense importar l'ordre d'arribada). Per resoldre el nostre problema, podem codificar cada religiós com una parella `{x, nom}`, on `nom` és la string amb el nom del religiós i `x = n * t - i`, on `t` és el tipus del religiós (el de menor rang és un 0, el de major rang un 2) i `i` és la posició d'arribada. Al codificar-ho així, aconseguim que es compleixi que el religiós amb major valor de `x` és el que ha de sortir abans de la cua.
+
+La cua de prioritat triga $\mathcal O(\log n)$ operacions per cada inserció/extracció, així que la complexitat total d'aquesta solució és $\mathcal O(n \log n)$. Això és pitjor que la solució anterior però serà acceptat pel Jutge si s'implementa de manera prou eficient.
 
 ## [Problema Q2. Graf especial](https://jutge.org/problems/P78645) <a name="Q2"/>
 
