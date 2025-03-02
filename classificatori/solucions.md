@@ -280,14 +280,16 @@ int main() {
         // El bit i-èssim de la representació binària de 'mask' ens diu si la
         // aresta i-èssima està present al graf (ordenant les arestes primer 
         // segons el vèrtex més petit, i després segons el vèrtex més gran).
+
+        // Imprimim el percentatge de grafs que hem comprovat ja.
         if(mask%10000 == 0) 
             cout << mask*100 / (1 << m)  << "\% completat" << endl;
-        bool invalid = false;
 
         // Construim el graf.
         vector<vector<int>> G(n); // graf actual
         vector<int> deg(n, 0); // seqüència de graus de G
         int b = 0; // índex de la següent aresta a processar
+        bool invalid = false;
         for(int i = 0; i < n and not invalid; ++i) {
             for(int j = i + 1; j < n and not invalid; ++j) {
                 if((1 << b)&mask) {
@@ -300,8 +302,8 @@ int main() {
                 ++b;
 
                 // només considerem els grafs amb seqüència de graus decreixent
-                // (així ens estalviem de comprovar grafs que són equivalents a
-                //  grafs que ja hem vist, reordenant els vèrtexos)
+                // (així ens estalviem de comprovar grafs que, si reordenem els 
+                //  vèrtexos, són equivalents a grafs que ja hem vist)
                 if(i and deg[i] > deg[i-1]) invalid = true;
             }
         }
@@ -332,6 +334,8 @@ int main() {
             }
         };
 
+        // Com que el cicle ha de passar per 6 dels 7 vèrtexos, sabem que ha de contenir per
+        // força el vèrtex 0 o el vèrtex 1. 
         fill(vist.begin(), vist.end(), false); // marquem tots els vèrtexos com a no visitats.
         BuscaCicle(0, 0, 0); // Busquem cicles que comencin pel vèrtex 0.
         fill(vist.begin(), vist.end(), false); // marquem tots els vèrtexos com a no visitats.
@@ -342,10 +346,13 @@ int main() {
         }
     }   
 
+    // Imprimim la solució
     cout << endl << endl << " solucio: ";
     for(int x : best_deg) 
         cout << x << " ";
     cout << endl << endl;
+
+    // Imprimim el graf buscat
     cout << "graf:" << endl;
     int b = 0;
     for(int i = 0; i < n; ++i) {
