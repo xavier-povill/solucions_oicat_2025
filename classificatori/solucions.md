@@ -264,7 +264,7 @@ La cua de prioritat triga $\mathcal O(\log n)$ operacions per cada inserció/ext
 
 ## [Problema Q2. Graf especial](https://jutge.org/problems/P78645) <a name="Q2"/>
 
-Un graf amb 7 vèrtexos pot tenir com a molt $\binom{7}{2} = 21$ arestes. Això vol dir que hi ha $2^{21} \cong 2\cdot 10^6$ grafs possibles. Una solució possible és iterar per tots ells i comprovar per cadascun si contenen algun cicle de longitud 6. Depèn de com de bé s'implementi la solució (és a dir, depenent de quant s'aprofiten les simetries del problema per reduir el nombre de grafs a comprovar), el codi pot trigar des d'uns pocs segons fins a uns quants minuts a executar-se. Tanmateix, el problema només ens demana entrar la resposta final, així que podem deixar el programa executant-se en segon pla mentre resolem altres problemes.
+Un graf amb 7 vèrtexos pot tenir com a molt $\binom{7}{2} = 21$ arestes. Això vol dir que hi ha $2^{21} \cong 2\cdot 10^6$ grafs possibles. Una solució possible és iterar per tots ells i comprovar per cadascun si contenen algun cicle de longitud 6. Depenent de com de bé s'implementi la solució (és a dir, depenent de quant s'aprofitin les simetries del problema per reduir el nombre de grafs a comprovar), el codi pot trigar des d'uns pocs segons fins a uns quants minuts a executar-se. Tanmateix, el problema només ens demana entrar la resposta final, així que podem deixar el programa executant-se en segon pla mentre resolem altres problemes.
 
 A continuació us donem una implementació relativament ràpida:
 
@@ -381,7 +381,7 @@ Suposem que tenim un cicle de longitud 6 en el graf amb graus `6-6-2-2-2-2-2` (�
 
 ## [Problema G2. Dissenyant estovalles](https://jutge.org/problems/P28763) <a name="G2"/>
 
-Per resoldre el problema, podem guardar-nos una llista amb 3 nombres per cada píxel, representant els valors $(r, g, b)$ que portem acumulats. Per cada franja, iterem per tots els píxels que inclou i augmentem els valors de `(r, g, b)` per cadascun d'ells. Al final, prenem el mínim entre el valor que tenim i 255 per tal de no passar-nos del màxim. 
+Per resoldre el problema, podem guardar-nos una llista amb 3 nombres per cada píxel, representant els valors `(r, g, b)` que portem acumulats. Per cada franja, iterem per tots els píxels que inclou i augmentem els valors de `(r, g, b)` per cadascun d'ells. Al final, prenem el mínim entre el valor que tenim i 255, per tal de no passar-nos del màxim. 
 
 <details><summary><b>Codi (Python3)</b></summary>
 
@@ -413,7 +413,7 @@ for x in range(m):
   for y in range(n):
     for z in range(3):
       color[y][x][z] = min(color[y][x][z], 255)
-      dib.point((x, y), tuple(color[y][x]))
+    dib.point((x, y), tuple(color[y][x]))
 
 img.save('output.png')
 ```
@@ -458,9 +458,9 @@ Proveu de plantejar el problema a partir de l'array de diferències.
 
 ## [Problema C5. Saltant amunt](https://jutge.org/problems/P57741) <a name="C5"/>
 
-Aquest problema és un exemple típic de <a href="https://aprende.olimpiada-informatica.org/algoritmia-dinamica-1">programació dinàmica</a>. Si `cost[i]` és el cost de trepitjar l'esglaó $i$-èssim, i definim `dp[i][j]` com el cost mínim d'arribar fins a l'esglaó $i$-èssim amb un últim salt de longitud $j$, aleshores podem calcular `dp[i][j]` a partir dels valors de `dp[i-j][1]`, ..., `dp[i-j][s]` i de `cost[i]`.
+Aquest problema és un exemple típic de <a href="https://aprende.olimpiada-informatica.org/algoritmia-dinamica-1">programació dinàmica</a>. Si `cost[i]` és el cost de trepitjar l'esglaó $i$-èssim, i definim `dp[i][j]` com el cost mínim d'arribar fins a l'esglaó $i$-èssim amb un últim salt de longitud $j$, aleshores podem calcular `dp[i][j]` a partir dels valors de `cost[i]` i de `dp[i-j][1]`, ..., `dp[i-j][s]`.
 
-Així doncs, podem calcular els valors de `dp[i][j]` iterant per totes les $i$ i $j$, en ordre creixent de $i$. Per calcular cada `dp[i][j]` hem d'iterar per com a molt per $s$ altres valors, així que la complexitat total és $\mathcal O(n \cdot s^2)$. 
+Així doncs, podem calcular els valors de `dp[i][j]` iterant per totes les $i$ i $j$, en ordre creixent de $i$. Per calcular cada `dp[i][j]` hem d'iterar com a molt per $s$ altres valors, així que la complexitat total és $\mathcal O(n \cdot s^2)$. 
 
 <details><summary><b>Codi (C++)</b></summary>
 
@@ -642,8 +642,11 @@ Sabríeu trobar una solució alternativa basada en trobar el diàmetre de cada a
 En aquest problema ens donen fins a 1000 punts amb coordenades enteres en el pla, i ens demanen comptar el nombre de triangles acutangles (és a dir, amb els tres angles menors que 90 graus) que podem formar amb ells.
 
 La solució trivial és $\mathcal O(n^3)$ (iterant per cada trio de punts i comprovant si formen un triangle acutangle) i és massa lenta per superar els casos grans. Per millorar-ho, ens hem de fixar en el fet que cada triangle té com a molt un únic angle que mesuri $\geq 90$ graus. Així doncs, podem deduir el nombre de triangles acutangles a partir del nombre total de triangles ($\binom{n}{3} = n(n-1)(n-2)/6$) i del nombre d'angles aguts, utilitzant que 
+
 $$
+\begin{equation*}
 \text{\# angles aguts} = 3 \text{\# triangles acutangles} + 2 \text{\# triangles no acutangles} = 3 \text{\# triangles acutangles} + 2 (\text{\# total de triangles} -\text{\# triangles acutangles}) = \text{\# triangles acutangles} + 2\binom{n}{3}
+\end{equation*}
 $$
 
 Per calcular el nombre d'angles aguts, fixem un punt (el vèrtex central de l'angle) i ordenem la resta de punts angularment al seu voltant. Aleshores iterem per la resta de punts mantenint un segon punter que apunta al primer punt que fa un angle $\geq 90$ graus amb el punt central i el punt pel que estem iterant en aquell moment. El nombre d'angles aguts serà doncs la diferència entre els dos punters (menys 1).
