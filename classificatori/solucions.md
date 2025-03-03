@@ -643,9 +643,7 @@ En aquest problema ens donen fins a 1000 punts amb coordenades enteres en el pla
 
 La solució trivial és $\mathcal O(n^3)$ (iterant per cada trio de punts i comprovant si formen un triangle acutangle) i és massa lenta per superar els casos grans. Per millorar-ho, ens hem de fixar en el fet que cada triangle té com a molt un únic angle que mesuri $\geq 90$ graus. Així doncs, podem deduir el nombre de triangles acutangles a partir del nombre total de triangles ($\binom{n}{3} = n(n-1)(n-2)/6$) i del nombre d'angles aguts, utilitzant que 
 
-$$
-\text{\# angles aguts} = 3 \text{\# triangles acutangles} + 2 \text{\# triangles no acutangles} = 3 \text{\# triangles acutangles} + 2 (\text{\# total de triangles} -\text{\# triangles acutangles}) = \text{\# triangles acutangles} + 2\binom{n}{3}
-$$
+$$\text{\# angles aguts} = 3 \text{\# triangles acutangles} + 2 \text{\# triangles no acutangles} = 3 \text{\# triangles acutangles} + 2 (\text{\# total de triangles} -\text{\# triangles acutangles}) = \text{\# triangles acutangles} + 2\binom{n}{3}$$
 
 Per calcular el nombre d'angles aguts, fixem un punt (el vèrtex central de l'angle) i ordenem la resta de punts angularment al seu voltant. Aleshores iterem per la resta de punts mantenint un segon punter que apunta al primer punt que fa un angle $\geq 90$ graus amb el punt central i el punt pel que estem iterant en aquell moment. El nombre d'angles aguts serà doncs la diferència entre els dos punters (menys 1).
 
