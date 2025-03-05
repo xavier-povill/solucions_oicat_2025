@@ -462,7 +462,7 @@ Aquest problema és un exemple típic de <a href="https://aprende.olimpiada-info
 
 Així doncs, podem calcular els valors de `dp[i][j]` iterant per totes les $i$ i $j$, en ordre creixent de $i$. Per calcular cada `dp[i][j]` hem d'iterar com a molt per $s$ altres valors, així que la complexitat total és $\mathcal O(n \cdot s^2)$. 
 
-<details><summary><b>Codi (C++)</b></summary>
+<details><summary><b>Codi iteratiu (C++)</b></summary>
 
 ```cpp
 #include<bits/stdc++.h>
@@ -492,6 +492,60 @@ int main(){
     int ans = INF;
     for(int salt = 1; salt <= s; ++salt)
       ans = min(ans, dp[n][salt]);
+    cout << ans << endl;
+  }
+}
+```
+</details>
+
+<details><summary><b>Codi recursiu (C++)</b></summary>
+
+```cpp
+#include<bits/stdc++.h>
+using namespace std; 
+
+int n, s; // nombre d'esglaons i màxima longitud de salt.
+vector<int> cost; // cost[i] := cost que hem de pagar per trepitjar l'esglaó i-èssim
+vector<vector<int>> dp; // dp[i][j] := minim cost per arribar a l'esglaó i-èssim, 
+                        // on a l'últim pas hem saltat j esglaons.
+                        // Si dp[i][j] == -1, vol dir que encara no ho hem calculat.
+int const INF = 1e9;
+
+// Calcula dp[i][salt].
+// Si ja l'hem calculat abans, en retorna el valor directament, per evitar repetir
+// càlculs innecessàriament.
+int GetDP(int i, int salt) {
+    if(dp[i][salt] != -1) return dp[i][salt]; // si ja l'hem calculat anteriorment.
+
+    // Cas base de la recursió (quan estem en el primer esglaó). 
+    if(i == 0)
+      return cost[0];
+
+    // És impossible que l'últim salt sigui més gran que el nombre d'esglaó on ens trobem. 
+    if(i < salt)
+      return INF;
+
+    // Calculem dp[i][salt]:
+    dp[i][salt] = INF;
+    for(int salt_previ = 1; salt_previ <= s + 1 - salt; ++salt_previ) {
+        dp[i][salt] = min(dp[i][salt], cost[i] + GetDP(i - salt, salt_previ));
+    }
+    return dp[i][salt];
+}
+
+
+int main(){
+  while(cin >> s >> n) {
+    cost = vector<int>(n);
+    for(int& x : cost) 
+      cin >> x;
+    cost.push_back(0); // Afegim un esglaó extra al final de cost 0, per simplificar el càlcul de la DP.
+
+    dp = vector<vector<int>>(n+1, vector<int>(s+1, -1));
+
+    int ans = INF;
+    for(int salt = 1; salt <= s; ++salt)
+      ans = min(ans, GetDP(n, salt));
     cout << ans << endl;
   }
 }
@@ -646,7 +700,7 @@ La solució trivial és $\mathcal O(n^3)$ (iterant per cada trio de punts i comp
 ```math
 \begin{align*}
 \text{nombre de angles aguts} &= 3 \cdot \text{nombre de triangles acutangles} + 2 \cdot \text{nombre de triangles no acutangles} \\
-&= 3 \cdot \text{nombre de triangles acutangles} + 2 \cdot (\text{nombre de total de triangles} -\text{nombre de triangles acutangles}) \\
+&= 3 \cdot \text{nombre de triangles acutangles} + 2 \cdot (\text{nombre total de triangles} -\text{nombre de triangles acutangles}) \\
 &= \text{nombre de triangles acutangles} + 2\binom{n}{3}
 \end{align*}
 ```
