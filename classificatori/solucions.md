@@ -647,7 +647,7 @@ La solució trivial és $\mathcal O(n^3)$ (iterant per cada trio de punts i comp
 \begin{align*}
 \text{nombre de angles aguts} &= 3 \cdot \text{nombre de triangles acutangles} + 2 \cdot \text{nombre de triangles no acutangles} \\
 &= 3 \cdot \text{nombre de triangles acutangles} + 2 \cdot (\text{nombre de total de triangles} -\text{nombre de triangles acutangles}) \\
-&= \text{nombre de triangles acutangles} + 2\binom{n}{3}$$
+&= \text{nombre de triangles acutangles} + 2\binom{n}{3}
 \end{align*}
 ```
 
