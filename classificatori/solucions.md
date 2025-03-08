@@ -459,7 +459,7 @@ Proveu de plantejar el problema a partir de l'array de diferències.
 ## [Problema C5. Saltant amunt](https://jutge.org/problems/P57741) <a name="C5"/>
 
 Sigui $f(i)$ el mínim cost d'arribar a l'esglaó $i$-èssim. Si sempre poguéssim fer salts de longitud entre 1 i $s$, aleshores podríem calcular $f(i)$ a partir dels anteriors, fent
-$$f(i) = c(i) + \min \left\{ f(i-1), f(i-2), \dots, f(i-s) \right\}$$,
+$$f(i) = c(i) + \min \left\\\{ f(i-1), f(i-2), \dots, f(i-s) \right\\\}$$,
 on $c(i)$ és el cost de trepitjar l'esglaó $i$-èssim.
 
 El problema és que si l'últim pas ha estat de longitud $k$, aleshores el següent només pot ser com a màxim de longitud $s + 1 - k$. Per tant, per calcular els $f(i)$ necessitem controlar d'alguna manera quina és la longitud de l'últim pas que hem fet. La manera típica de fer-ho és afegir una variable extra: ara tindrem una funció $f(i, k)$ que ens donarà el mínim cost d'arribar a l'esglaó $i$-èssim, on l'últim pas que hem fet és de longitud $k$. Aleshores:
