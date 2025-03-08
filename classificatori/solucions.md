@@ -458,47 +458,29 @@ Proveu de plantejar el problema a partir de l'array de diferències.
 
 ## [Problema C5. Saltant amunt](https://jutge.org/problems/P57741) <a name="C5"/>
 
-Aquest problema és un exemple típic de <a href="https://aprende.olimpiada-informatica.org/algoritmia-dinamica-1">programació dinàmica</a>. Si `cost[i]` és el cost de trepitjar l'esglaó $i$-èssim, i definim `dp[i][j]` com el cost mínim d'arribar fins a l'esglaó $i$-èssim amb un últim salt de longitud $j$, aleshores podem calcular `dp[i][j]` a partir dels valors de `cost[i]` i de `dp[i-j][1]`, ..., `dp[i-j][s]`.
+Sigui $f(i)$ el mínim cost d'arribar a l'esglaó $i$-èssim. Si sempre poguéssim fer salts de longitud entre 1 i $s$, aleshores podríem calcular $f(i)$ a partir dels anteriors, fent
+$$f(i) = c(i) + \min \left\{ f(i-1), f(i-2), \dots, f(i-s) \right\}$$,
+on $c(i)$ és el cost de trepitjar l'esglaó $i$-èssim.
 
-Així doncs, podem calcular els valors de `dp[i][j]` iterant per totes les $i$ i $j$, en ordre creixent de $i$. Per calcular cada `dp[i][j]` hem d'iterar com a molt per $s$ altres valors, així que la complexitat total és $\mathcal O(n \cdot s^2)$. 
+El problema és que si l'últim pas ha estat de longitud $k$, aleshores el següent només pot ser com a màxim de longitud $s + 1 - k$. Per tant, per calcular els $f(i)$ necessitem controlar d'alguna manera quina és la longitud de l'últim pas que hem fet. La manera típica de fer-ho és afegir una variable extra: ara tindrem una funció $f(i, k)$ que ens donarà el mínim cost d'arribar a l'esglaó $i$-èssim, on l'últim pas que hem fet és de longitud $k$. Aleshores:
 
-<details><summary><b>Codi iteratiu (C++)</b></summary>
+$$f(i,k) = c(i) + \min \left\{ f(i-k, 1), f(i-k, 2), \dots, f(i-k, s + 1 - k) \right\}$$
 
-```cpp
-#include<bits/stdc++.h>
-using namespace std; 
- 
-int main(){
-  int s, n;
-  while(cin >> s >> n) {
-    vector<int> cost(n);
-    for(int& x : cost) 
-      cin >> x;
-    cost.push_back(0); // Afegim un esglaó extra al final de cost 0, per simplificar el càlcul de la DP.
+Un cop calculats els valors de $f(i,k)$ per tot $i$ i per tot $k$, la solució és fàcil de trobar. Podem afegir un esglaó de cost 0 al final, de manera que la resposta és
 
-    int const INF = 1e9;
-    // dp[i][j] := minim cost per arribar a l'esglaó i-èssim, on a l'últim pas hem saltat j esglaons.
-    vector<vector<int>> dp(n+1, vector<int>(s+1, INF));
-    // Podem suposar que al principi venim d'un salt de mida 1, ja que llavors al proper podem saltar
-    // qualsevol longitud des de 1 fins a s.
-    dp[0][1] = cost[0];
-    for(int i = 1; i <= n; ++i) {
-      for(int last = 1; last <= s; ++last) {
-        for(int salt = 1; salt <= min(i, s + 1 - last); ++salt) {
-          dp[i][salt] = min(dp[i][salt], dp[i - salt][last] + cost[i]);
-        }
-      }
-    }
-    int ans = INF;
-    for(int salt = 1; salt <= s; ++salt)
-      ans = min(ans, dp[n][salt]);
-    cout << ans << endl;
-  }
-}
-```
-</details>
+$$ \min \left\{ f(n, 1), f(n, 2), \dots, f(n, s) \right\}$$
 
-<details><summary><b>Codi recursiu (C++)</b></summary>
+Observeu que hem de prendre el mínim entre tots els possibles valors de $k$, ja que no sabem quina serà la longitud òptima per a l'últim salt.
+
+Si proveu d'implementar el càlcul de $f(i,k)$ amb una funció recursiva, veureu que el programa triga molt a executar-se. El que passa és que per calcular $f(i,k)$ necessitem calcular fins a $s$ altres valors de $f$, de manera que el nombre total de crides a la funció creix exponencialment a mesura que augmenta $n$ (el nombre d'esglaons).
+
+Per resoldre-ho, utilitzem la tècnica coneguda com a <a href="https://aprende.olimpiada-informatica.org/algoritmia-dinamica-1">programació dinàmica</a>. La idea és anar-nos guardant els valors de $f(i,k)$ que calculem per tal que el proper cop que volem calcular el mateix $f(i,k)$, poguem retornar directament el valor que tenim guardat. Així ens garantim que no farem més de $n \cdot s$ crides a la funció que calcula $f$ (una per cada parella de $(i,k)$).
+
+En el codi següent ho hem implementat amb una matriu $dp$ de mida $n \times s$, que al principi té tots els valors inicialitzats a -1. Quan calculem $f(i,k)$, ens guardem el resultat a $dp[i][k]$. Així doncs, el proper cop que volguem calcular el mateix $f(i,k)$, accedirem a $dp[i][k]$, veurem que és diferent de -1, i retornarem directament el valor que tenim guardat.
+
+Amb aquest mètode la complexitat total és $\mathcal O(n \cdot s^2)$, ja que hem de calcular $n \cdot s$ valors de $f$, i cadascun ens requereix fer $\mathcal O(s)$ operacions. 
+
+<details><summary><b>Codi (C++)</b></summary>
 
 ```cpp
 #include<bits/stdc++.h>
@@ -551,6 +533,49 @@ int main(){
 }
 ```
 </details>
+
+En els problemes de programació dinàmica, sovint (però no sempre!) és més ràpid implementar la solució sense fer servir funcions recursives, sinó amb un bucle que itera sobre totes les parelles $(i,k)$ i calcula $f(i,k)$. Per tal de fer-ho així, necessitem iterar en algun ordre que ens garanteixi haver calculat anteriorment tots els valors de $f$ que necessitem per obtenir el valor actual. En aquest cas, per calcular $f(i,k)$ només necessitem els valors de $f(i-k, x)$, amb $1 \leq x \leq s + 1 - k$, així que podem iterar en ordre creixent de $i$. 
+
+<details><summary><b>Codi iteratiu (C++)</b></summary>
+
+```cpp
+#include<bits/stdc++.h>
+using namespace std; 
+ 
+int main(){
+  int s, n;
+  while(cin >> s >> n) {
+    vector<int> cost(n);
+    for(int& x : cost) 
+      cin >> x;
+    cost.push_back(0); // Afegim un esglaó extra al final de cost 0, per simplificar el càlcul de la DP.
+
+    int const INF = 1e9;
+    // dp[i][j] := minim cost per arribar a l'esglaó i-èssim, on a l'últim pas hem saltat j esglaons.
+    vector<vector<int>> dp(n+1, vector<int>(s+1, INF));
+    // Podem suposar que al principi venim d'un salt de mida 1, ja que llavors al proper podem saltar
+    // qualsevol longitud des de 1 fins a s.
+    dp[0][1] = cost[0];
+    for(int i = 1; i <= n; ++i) {
+      for(int last = 1; last <= s; ++last) {
+        for(int salt = 1; salt <= min(i, s + 1 - last); ++salt) {
+          dp[i][salt] = min(dp[i][salt], dp[i - salt][last] + cost[i]);
+        }
+      }
+    }
+    int ans = INF;
+    for(int salt = 1; salt <= s; ++salt)
+      ans = min(ans, dp[n][salt]);
+    cout << ans << endl;
+  }
+}
+```
+</details>
+
+<details><summary><b>Repte</b></summary>
+Sabries optimitzar la solució anterior per tal que la complexitat total sigui $\mathcal O(n \cdot s)$?
+</details>
+
 
 ## [Problema C6. Camins màxims en un graf](https://jutge.org/problems/P51388) <a name="C6"/>
 
