@@ -474,7 +474,7 @@ Observeu que hem de prendre el mínim entre tots els possibles valors de $k$, ja
 
 Si proveu d'implementar el càlcul de $f(i,k)$ amb una funció recursiva, veureu que el programa triga molt a executar-se. El que passa és que per calcular $f(i,k)$ necessitem calcular fins a $s$ altres valors de $f$, de manera que el nombre total de crides a la funció creix exponencialment a mesura que augmenta $n$ (el nombre d'esglaons).
 
-Per resoldre-ho, utilitzem la tècnica coneguda com a <a href="https://aprende.olimpiada-informatica.org/algoritmia-dinamica-1">programació dinàmica</a>. La idea és anar-nos guardant els valors de $f(i,k)$ que calculem per tal que el proper cop que volem calcular el mateix $f(i,k)$, poguem retornar directament el valor que tenim guardat. Així ens garantim que no farem més de $n \cdot s$ crides a la funció que calcula $f$ (una per cada parella de $(i,k)$).
+Per resoldre-ho, utilitzem la tècnica coneguda com a <a href="https://aprende.olimpiada-informatica.org/algoritmia-dinamica-1">programació dinàmica</a>. La idea és anar-nos guardant els valors de $f(i,k)$ que calculem per tal que el proper cop que volem calcular el mateix $f(i,k)$, poguem retornar directament el valor que tenim guardat. Així ens garantim que no farem més de $n \cdot s$ crides a la funció que calcula $f$ (una per cada parella de $ (i,k) $).
 
 En el codi següent ho hem implementat amb una matriu $dp$ de mida $n \times s$, que al principi té tots els valors inicialitzats a -1. Quan calculem $f(i,k)$, ens guardem el resultat a $dp[i][k]$. Així doncs, el proper cop que volguem calcular el mateix $f(i,k)$, accedirem a $dp[i][k]$, veurem que és diferent de -1, i retornarem directament el valor que tenim guardat.
 
