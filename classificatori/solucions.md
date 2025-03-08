@@ -464,11 +464,11 @@ on $c(i)$ és el cost de trepitjar l'esglaó $i$-èssim.
 
 El problema és que si l'últim pas ha estat de longitud $k$, aleshores el següent només pot ser com a màxim de longitud $s + 1 - k$. Per tant, per calcular els $f(i)$ necessitem controlar d'alguna manera quina és la longitud de l'últim pas que hem fet. La manera típica de fer-ho és afegir una variable extra: ara tindrem una funció $f(i, k)$ que ens donarà el mínim cost d'arribar a l'esglaó $i$-èssim, on l'últim pas que hem fet és de longitud $k$. Aleshores:
 
-$$f(i,k) = c(i) + \min \left\{ f(i-k, 1), f(i-k, 2), \dots, f(i-k, s + 1 - k) \right\}$$
+$$f(i,k) = c(i) + \min \left\\\{ f(i-k, 1), f(i-k, 2), \dots, f(i-k, s + 1 - k) \right\\\}$$
 
 Un cop calculats els valors de $f(i,k)$ per tot $i$ i per tot $k$, la solució és fàcil de trobar. Podem afegir un esglaó de cost 0 al final, de manera que la resposta és
 
-$$ \min \left\{ f(n, 1), f(n, 2), \dots, f(n, s) \right\}$$
+$$ \min \left\\\{ f(n, 1), f(n, 2), \dots, f(n, s) \right\\\}$$
 
 Observeu que hem de prendre el mínim entre tots els possibles valors de $k$, ja que no sabem quina serà la longitud òptima per a l'últim salt.
 
