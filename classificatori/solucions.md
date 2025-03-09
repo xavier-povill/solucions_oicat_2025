@@ -731,7 +731,7 @@ $$
 
 El problema d'això és que si el camí més llarg des del pare de $v$ fins a una fulla passa per $v$, aleshores quan calculem $\text{DistPare}(v)$ estem anant de $v$ al pare, i llavors tornant a baixar cap a $v$. Això no ho volem permetre, ja que el camí estaria repetint vèrtexos.
 
-Per resoldre-ho, en el primer pas no només calculem $\text{DistFill}(v)$ (la major distància des de $v$ fins a una fulla), sinó que també ens guardem $\text{MillorFill}(v)$ (per quin fill de $v$ passa aquest camí) i $\text{SegonDistFill}(v)$ (quina és la major distància des de $v$ a una fulla sense passar per $\text{MillorFill}(v)$).
+Per resoldre-ho, en el primer pas no només calculem $\text{DistFill}(v)$ (la major distància des de $v$ fins a una fulla), sinó que també ens guardem $\text{MillorFill}(v)$ (per quin fill de $v$ passa aquest camí), i $\text{SegonDistFill}(v)$, quina és la major distància des de $v$ a una fulla sense passar per $\text{MillorFill}(v)$.
 
 Aleshores, per calcular $\text{DistPare}(v)$, comprovem si $\text{MillorFill}(\text{pare}(v)) == v$, i en cas que així sigui utilitzem $\text{SegonDistFill}(\text{pare}(v))$ en lloc de $\text{DistFill}(\text{pare}(v))$ per fer els càlculs.
 
