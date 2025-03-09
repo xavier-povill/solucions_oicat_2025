@@ -585,8 +585,7 @@ Ara bé, en aquest problema ens demanen trobar els camins més llargs des de cad
 
 Així doncs, una possible solució és la següent: per cada vèrtex, calculem la distància a la resta de vèrtexos amb un BFS, i ens quedem amb la distància més gran. Això funciona perquè el camí més llarg entre dos vèrtexos és també el camí més curt entre els dos vèrtexos (per això de que hi ha un únic camí entre cada parell de vèrtexos), i això és precisament el que podem calcular amb el BFS.
 
-La complexitat de la solució és $\mathcal O(n^2)$, ja que hem de fer un BFS (que costa $\mathcal O(n)$) per cada un dels $n$ vèrtexos. Això hauria de ser suficient per obtenir la puntuació parcial.
- 
+La complexitat de la solució és $\mathcal O(n^2)$, ja que per cada un dels $n$ vèrtexos hem de fer un BFS de cost $\mathcal O(n)$. Això hauria de ser suficient per obtenir la puntuació parcial.
 <details><summary><b>Codi - Solució parcial (C++)</b></summary>
 
 ```cpp
