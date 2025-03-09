@@ -579,12 +579,14 @@ Sabries optimitzar la solució anterior per tal que la complexitat total sigui $
 
 ## [Problema C6. Camins màxims en un graf](https://jutge.org/problems/P51388) <a name="C6"/>
 
-Si només volguéssim resoldre el problema des d'un vèrtex, podríem fer un recorregut en amplada (BFS) o en profunditat (DFS) des del vèrtex donat, i retornar la major de les distàncies que hem calculat.
+Trobar el camí més llarg en un graf és un problema NP-complet (tècnicament, estem parlant de la versió decisional del problema, que consisteix en dir si existeix un camí de mida $\geq k$ donat un enter $k$ <a href="https://en.wikipedia.org/wiki/Longest_path_problem"/>). Això vol dir que si es trobés un algorisme polinòmic que resolgui aquest problema, es podria resoldre també qualsevol altre problema de NP en temps polinòmic. Com que actualment es creu que P $\neq$ NP (encara que no està demostrat), això vol dir que no és probable que el problema del camí més llarg es pugui resoldre en temps polinòmic. 
 
-Això no tindria perquè funcionar en un graf arbitrari, ja que ni el BFS ni el DFS tenen per què explorar els vèrtexos en l'ordre necessari per trobar el camí més llarg. Ara bé, com que ens diuen que el graf donat no té cicles, sabem que entre cada parella de vèrtexos hi haurà com a molt un únic camí que va d'un a l'altre sense repetir vèrtexos. Això voldrà dir que obtindrem les distàncies correctes sense importar el criteri que utilitzem per recórrer el graf.
+Ara bé, en aquest problema ens demanen trobar els camins més llargs des de cada vèrtex en un graf *sense cicles*. Això simplifica el problema enormement, ja que en un graf sense cicles sempre hi ha com a molt un camí entre cada parell de vèrtexos (com a exercici, convenceu-vos que si hi hagués dos camins diferents entre un cert parell de vèrtexos, això implicaria que el graf ha de contenir un cicle).
 
-Repetint el procediment per cada un dels $n$ vèrtexos, obtenim una solució $\mathcal O(n^2)$, que és suficient per rebre la puntuació parcial: 
+Així doncs, una possible solució és la següent: per cada vèrtex, calculem la distància a la resta de vèrtexos amb un BFS, i ens quedem amb la distància més gran. Això funciona perquè el camí més llarg entre dos vèrtexos és també el camí més curt entre els dos vèrtexos (per això de que hi ha un únic camí entre cada parell de vèrtexos), i això és precisament el que podem calcular amb el BFS.
 
+La complexitat de la solució és $\mathcal O(n^2)$, ja que hem de fer un BFS (que costa $\mathcal O(n)$) per cada un dels $n$ vèrtexos. Això hauria de ser suficient per obtenir la puntuació parcial.
+ 
 <details><summary><b>Codi - Solució parcial (C++)</b></summary>
 
 ```cpp
@@ -624,6 +626,8 @@ int main() {
 }
 ```
 </details>
+
+Observeu que en el codi anterior utilitzem un DFS en lloc d'un BFS. En un graf general, per calcular la mínima distància entre un vèrtex i la resta hauríem d'utilitzar un BFS. En un graf sense cicles, però, ho podem fer tant amb un BFS com amb un DFS, ja que l'ordre en que visitem els vèrtexos no importa (novament, degut al fet que hi ha un únic camí entre cada parell de vèrtexos).
 
 Per rebre la puntuació completa cal millorar l'algorisme fins a $\mathcal O(n)$. Una possible manera és la següent:
 
@@ -708,12 +712,31 @@ int main(){
 ```
 </details>
 
-Aquest codi utilitza que els grafs sense cicles són una unió d'arbres (el que, per raons òbvies, es coneix en llenguatge matemàtic com un *bosc*). Per cada arbre, fixem arbitràriament un vèrtex com a arrel. Aleshores, cada vèrtex de l'arbre té un *pare* (el vèrtex veí que té en direcció a l'arrel) i zero o més *fills* (els veïns que té en direcció contrària a l'arrel).
+Per entendre el que fa aquest codi, cal primer una mica de terminologia sobre grafs. Un graf connex i sense cicles és el que es coneix com a un *arbre*. En els arbres generalment triem un vèrtex especial que anomenem *arrel*, i ordenem la resta de vèrtexos per nivells segons la seva distància a l'arrel. Cada vèrtex diferent de l'arrel està connectat a un únic vèrtex de nivell inferior (el seu *pare*), i a zero o més vèrtexos de nivell superior (els seus *fills*). Si considerem un graf sense cicles però traiem la condició que hagi de ser connex, obtenim una unió d'arbres disjunts, que s'anomena (per raons òbvies) *bosc*.
 
-Per cada vèrtex, calculem el camí més llarg que es pot aconseguir anant cap a un fill (que serà el màxim dels camins dels fills més 1) i el camí més llarg que es pot aconseguir anant cap al pare. La primera quantitat la podem calcular fent un DFS des de l'arrel cap avall, i la segona fent un DFS en direcció contrària. La única dificultat que ens trobem és que, per calcular el camí més llarg anant cap al pare, hem de descartar els camins que van al pare i tornen a baixar cap al mateix vèrtex. Per fer-ho, ens guardem no només la longitud del camí més llarg cap als fills, sinó també quin fill és el que l'assoleix i quina és la longitud del camí més llarg que no passa per aquell fill. Així, al calcular el camí més llarg anant cap al pare, comprovem si el vèrtex actual és el fill del pare que assoleix el camí més llarg, i en aquest cas, utilitzem el segon camí més llarg (del pare als fills) en lloc del camí més llarg.
+En aquest problema ens donen un bosc i hem de trobar la longitud del camí més llarg que surt de cada vèrtex. Òbviament, podem tractar cada un dels arbres que forma el bosc per separat, ja que els camins no poden creuar d'un arbre a un altre. Donat un arbre, triarem arbitràriament un vèrtex com a arrel, i ordenarem la resta de vèrtexos per nivells.
+
+Observeu que el camí més llarg des d'un vèrtex pot ser de dos tipus: o bé va cap a un fill del vèrtex, després cap a un fill del fill, i així successivament, fins a arribar a un vèrtex sense fills (el que es coneix com a *fulla*); o bé va cap al pare del vèrtex (i des d'allà pot o bé anar a un fill del pare diferent del propi vèrtex, o continuar enrere cap al pare del pare).
+
+La longitud dels camins del primer tipus és fàcil de calcular. Per cada vèrtex $v$, definim $\operatorname{dist_fill}(v)$ com la màxima longitud d'un camí que comenci a $v$ i vagi fins a una fulla. Si $v$ és una fulla, sabem que $\operatorname{dist_fill}(v) = 0$. Aleshores, processant la resta de vèrtexos de major a menor distància a l'arrel, tenim que
+$$
+\operatorname{dist_fill}(v) = \max\limits_{u \text{ fill de } v} \operatorname{dist_fill}(u)
+$$
+
+Un cop hem calculat $\operatorname{dist_fill}(v)$ per cada vèrtex $v$, procedim a calcular $\operatorname{dist_pare}(v)$, que és la màxima longitud d'un camí que comenci a $v$ i vagi cap al pare de $v$ (i des d'allà, cap a on sigui). A primera vista, se'ns pot acudir calcular-ho com en el cas anterior, usant que $\operatorname{dist_pare}(v) = 0$ si $v$ és l'arrel, i processant la resta de vèrtexos de menor a major distància a l'arrel, fent
+$$
+\operatorname{dist_pare}(v) = 1 + \max \left\\\{ \operatorname{dist_fill}(\operatorname{pare}(v)), \operatorname{dist_pare}(\operatorname{pare}(v)) \right\\\}
+$$
+El problema d'això és que si el camí més llarg des del pare de $v$ fins a una fulla passa per $v$, aleshores quan calculem $\operatorname{dist_pare}(v)$ estem anant de $v$ al pare, i llavors tornant a baixar cap a $v$. Això no ho volem permetre, ja que el camí estaria repetint vèrtexos.
+
+Per resoldre-ho, en el primer pas no només calculem la major distància des de cada vèrtex $v$ fins a una fulla ($\operatorname{dist_fill}(v)$), sinó que també ens guardem per quin fill de $v$ passa aquest camí ($\operatorname{millor_fill}(v)$), i quina és la major distància des de $v$ a una fulla sense passar per $\operatorname{millor_fill}(v)$ ($\operatorname{segon_dist_fill}(v)$).
+
+Aleshores, per calcular $\operatorname{dist_pare}(v)$, comprovem si $\operatorname{millor_fill}(\operatorname{pare}(v)) == v$, i en cas que així sigui utilitzem $\operatorname{segon_dist_fill}(\operatorname{pare}(v))$ en lloc de $\operatorname{dist_fill}(\operatorname{pare}(v))$ per fer els càlculs.
+
+Per acabar, el camí més llarg des de cada vèrtex $v$ serà el màxim entre $\operatorname{dist_fill}(v)$ i $\operatorname{dist_pare}(v)$.
 
 <details><summary><b>Repte</b></summary>
-Sabríeu trobar una solució alternativa basada en trobar el diàmetre de cada arbre? 
+Existeix una solució alternativa basada en trobar el diàmetre de cada arbre. Sabríeu com fer-ho? 
 </details>
 
 ## [Problema C7. Estacions de radar](https://jutge.org/problems/P45007) <a name="C7"/>
