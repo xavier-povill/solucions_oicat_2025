@@ -717,22 +717,22 @@ En aquest problema ens donen un bosc i hem de trobar la longitud del camí més 
 
 Observeu que el camí més llarg des d'un vèrtex pot ser de dos tipus: o bé va cap a un fill del vèrtex, després cap a un fill del fill, i així successivament, fins a arribar a un vèrtex sense fills (el que es coneix com a *fulla*); o bé va cap al pare del vèrtex (i des d'allà pot o bé anar a un fill del pare diferent del propi vèrtex, o continuar enrere cap al pare del pare).
 
-La longitud dels camins del primer tipus és fàcil de calcular. Per cada vèrtex $v$, definim $\text{dist\_fill}(v)$ com la màxima longitud d'un camí que comenci a $v$ i vagi fins a una fulla. Si $v$ és una fulla, sabem que $\text{dist\_fill}(v) = 0$. Aleshores, processant la resta de vèrtexos de major a menor distància a l'arrel, tenim que
+La longitud dels camins del primer tipus és fàcil de calcular. Per cada vèrtex $v$, definim $\mathrm{dist\_fill}(v)$ com la màxima longitud d'un camí que comenci a $v$ i vagi fins a una fulla. Si $v$ és una fulla, sabem que $\mathrm{dist\_fill}(v) = 0$. Aleshores, processant la resta de vèrtexos de major a menor distància a l'arrel, tenim que
 $$
-\text{dist\_fill}(v) = \max\limits_{u \text{ fill de } v} \text{dist\_fill}(u)
+\mathrm{dist\_fill}(v) = \max\limits_{u \text{ fill de } v} \mathrm{dist\_fill}(u)
 $$
 
-Un cop hem calculat $\text{dist\_fill}(v)$ per cada vèrtex $v$, procedim a calcular $\text{dist_pare}(v)$, que és la màxima longitud d'un camí que comenci a $v$ i vagi cap al pare de $v$ (i des d'allà, cap a on sigui). A primera vista, se'ns pot acudir calcular-ho com en el cas anterior, usant que $\text{dist_pare}(v) = 0$ si $v$ és l'arrel, i processant la resta de vèrtexos de menor a major distància a l'arrel, fent
+Un cop hem calculat $\mathrm{dist\_fill}(v)$ per cada vèrtex $v$, procedim a calcular $\mathrm{dist_pare}(v)$, que és la màxima longitud d'un camí que comenci a $v$ i vagi cap al pare de $v$ (i des d'allà, cap a on sigui). A primera vista, se'ns pot acudir calcular-ho com en el cas anterior, usant que $\mathrm{dist_pare}(v) = 0$ si $v$ és l'arrel, i processant la resta de vèrtexos de menor a major distància a l'arrel, fent
 $$
-\text{dist_pare}(v) = 1 + \max \left\\\{ \text{dist\_fill}(\text{pare}(v)), \text{dist_pare}(\text{pare}(v)) \right\\\}
+\mathrm{dist_pare}(v) = 1 + \max \left\\\{ \mathrm{dist\_fill}(\mathrm{pare}(v)), \mathrm{dist_pare}(\mathrm{pare}(v)) \right\\\}
 $$
-El problema d'això és que si el camí més llarg des del pare de $v$ fins a una fulla passa per $v$, aleshores quan calculem $\text{dist_pare}(v)$ estem anant de $v$ al pare, i llavors tornant a baixar cap a $v$. Això no ho volem permetre, ja que el camí estaria repetint vèrtexos.
+El problema d'això és que si el camí més llarg des del pare de $v$ fins a una fulla passa per $v$, aleshores quan calculem $\mathrm{dist_pare}(v)$ estem anant de $v$ al pare, i llavors tornant a baixar cap a $v$. Això no ho volem permetre, ja que el camí estaria repetint vèrtexos.
 
-Per resoldre-ho, en el primer pas no només calculem la major distància des de cada vèrtex $v$ fins a una fulla ($\text{dist\_fill}(v)$), sinó que també ens guardem per quin fill de $v$ passa aquest camí ($\text{millor_fill}(v)$), i quina és la major distància des de $v$ a una fulla sense passar per $\text{millor_fill}(v)$ ($\text{segon_dist\_fill}(v)$).
+Per resoldre-ho, en el primer pas no només calculem la major distància des de cada vèrtex $v$ fins a una fulla ($\mathrm{dist\_fill}(v)$), sinó que també ens guardem per quin fill de $v$ passa aquest camí ($\mathrm{millor_fill}(v)$), i quina és la major distància des de $v$ a una fulla sense passar per $\mathrm{millor_fill}(v)$ ($\mathrm{segon_dist\_fill}(v)$).
 
-Aleshores, per calcular $\text{dist_pare}(v)$, comprovem si $\text{millor_fill}(\text{pare}(v)) == v$, i en cas que així sigui utilitzem $\text{segon_dist\_fill}(\text{pare}(v))$ en lloc de $\text{dist\_fill}(\text{pare}(v))$ per fer els càlculs.
+Aleshores, per calcular $\mathrm{dist_pare}(v)$, comprovem si $\mathrm{millor_fill}(\mathrm{pare}(v)) == v$, i en cas que així sigui utilitzem $\mathrm{segon_dist\_fill}(\mathrm{pare}(v))$ en lloc de $\mathrm{dist\_fill}(\mathrm{pare}(v))$ per fer els càlculs.
 
-Per acabar, el camí més llarg des de cada vèrtex $v$ serà el màxim entre $\text{dist\_fill}(v)$ i $\text{dist_pare}(v)$.
+Per acabar, el camí més llarg des de cada vèrtex $v$ serà el màxim entre $\mathrm{dist\_fill}(v)$ i $\mathrm{dist_pare}(v)$.
 
 <details><summary><b>Repte</b></summary>
 Existeix una solució alternativa basada en trobar el diàmetre de cada arbre. Sabríeu com fer-ho? 
