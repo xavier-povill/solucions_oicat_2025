@@ -745,21 +745,29 @@ Existeix una solució alternativa basada en trobar el diàmetre de cada arbre. S
 
 En aquest problema ens donen fins a 1000 punts amb coordenades enteres en el pla, i ens demanen comptar el nombre de triangles acutangles (és a dir, amb els tres angles menors que 90 graus) que podem formar amb ells.
 
-La solució trivial és $\mathcal O(n^3)$ (iterant per cada trio de punts i comprovant si formen un triangle acutangle) i és massa lenta per superar els casos grans. Per millorar-ho, ens hem de fixar en el fet que cada triangle té com a molt un únic angle que mesuri $\geq 90$ graus. Així doncs, podem deduir el nombre de triangles acutangles a partir del nombre total de triangles ($\binom{n}{3} = n(n-1)(n-2)/6$) i del nombre d'angles aguts, utilitzant que 
+Una solució senzilla seria iterar per tots els possibles trios de punts i comprovar per cadascun si forma un triangle acutangle. Això és massa lent, ja que és $\mathcal O(n^3)$. 
+
+Per millorar-ho, observem primer que per comptar el nombre de triangles acutangles, en tenim prou amb comptar el nombre d'angles aguts. Això és degut a que cada triangle acutangle tindrà 3 angles aguts, mentre que cada triangle no acutangle tindrà 2 angles aguts (ja que només pot tenir un angle $\geq 90$ graus). Així doncs, donat que el nombre total de triangles és $\binom{n}{3} = n(n-1)(n-2)/6$, tenim que
 
 ```math
 \begin{align*}
-\text{nombre de angles aguts} &= 3 \cdot \text{nombre de triangles acutangles} + 2 \cdot \text{nombre de triangles no acutangles} \\
+\text{nombre d'angles aguts} &= 3 \cdot \text{nombre de triangles acutangles} + 2 \cdot \text{nombre de triangles no acutangles} \\
 &= 3 \cdot \text{nombre de triangles acutangles} + 2 \cdot (\text{nombre total de triangles} -\text{nombre de triangles acutangles}) \\
 &= \text{nombre de triangles acutangles} + 2\binom{n}{3}
 \end{align*}
 ```
 
-Per calcular el nombre d'angles aguts, fixem un punt (el vèrtex central de l'angle) i ordenem la resta de punts angularment al seu voltant. Aleshores iterem per la resta de punts mantenint un segon punter que apunta al primer punt que fa un angle $\geq 90$ graus amb el punt central i el punt pel que estem iterant en aquell moment. El nombre d'angles aguts serà doncs la diferència entre els dos punters (menys 1).
+de manera que
 
-Per suposat, tot i que parlem de punters en l'explicació anterior (i aquesta tècnica es coneix habitualment com a <a href="https://usaco.guide/silver/two-pointers?lang=cpp">two-pointers method</a>) és molt més còmode iterar utilitzant els índexos de l'array, anant amb compte quan el segon punter "dona la volta" i torna a començar pel principi.
+$$ 
+\text{nombre de triangles acutangles} = \text{nombre d'angles aguts} - 2\binom{n}{3}
+$$
 
-Per a la implementació, és recomanable fer totes les operacions amb enters. Així s'eviten errors de precisió i es redueix el factor constant de la complexitat asimptòtica, que és de $\mathcal O(n^2)$.
+Per calcular el nombre d'angles aguts, fixem un punt $P$ (el vèrtex central de l'angle) i ordenem la resta de punts angularment al seu voltant. Per cada altre punt $Q$, volem trobar el nombre de punts $R$ tals que l'angle $QPR$ és agut. Una manera trivial de fer-ho seria començar amb $R \gets Q$ i mentre que l'angle $QPR$ és agut, avançar $R$ una posició (en el vector de punts ordenats per angle). Un cop arribats a un $QPR$ que no és agut, restem l'índex de $R$ i l'índex de $Q$ en el vector, i això ens donarà el nombre de punts que formen un angle agut juntament amb $P$ i $Q$.
+
+Per evitar haver de recórrer tots els punts cada cop, podem utilitzar que si ja hem calculat el $R$ per un cert $Q$, aleshores pel següent punt $Q'$, el $R'$ corresponent no es pot trobar abans que $R$. Així doncs, en lloc de tornar a començar des de $Q'$, en tenim prou amb comprovar a partir de $R$. Aquesta tècnica es coneix habitualment com a <a href="https://usaco.guide/silver/two-pointers?lang=cpp">two-pointers method</a>.
+
+Per a la implementació, és recomanable fer totes les operacions amb enters (anant amb compte de fer servir `long long` per les multiplicacions), en lloc de nombres de coma flotant. Així s'eviten errors de precisió i es redueix el factor constant de la complexitat asimptòtica, que és de $\mathcal O(n^2)$.
 
 <details><summary><b>Codi (C++)</b></summary>
 
