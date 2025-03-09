@@ -718,14 +718,17 @@ En aquest problema ens donen un bosc i hem de trobar la longitud del camí més 
 Observeu que el camí més llarg des d'un vèrtex pot ser de dos tipus: o bé va cap a un fill del vèrtex, després cap a un fill del fill, i així successivament, fins a arribar a un vèrtex sense fills (el que es coneix com a *fulla*); o bé va cap al pare del vèrtex (i des d'allà pot o bé anar a un fill del pare diferent del propi vèrtex, o continuar enrere cap al pare del pare).
 
 La longitud dels camins del primer tipus és fàcil de calcular. Per cada vèrtex $v$, definim $\text{DistFill}(v)$ com la màxima longitud d'un camí que comenci a $v$ i vagi fins a una fulla. Si $v$ és una fulla, sabem que $\text{DistFill}(v) = 0$. Aleshores, processant la resta de vèrtexos de major a menor distància a l'arrel, tenim que
+
 $$
 \text{DistFill}(v) = \max\limits_{u \text{ fill de } v} \text{DistFill}(u)
 $$
 
 Un cop hem calculat $\text{DistFill}(v)$ per cada vèrtex $v$, procedim a calcular $\text{DistPare}(v)$, que és la màxima longitud d'un camí que comenci a $v$ i vagi cap al pare de $v$ (i des d'allà, cap a on sigui). A primera vista, se'ns pot acudir calcular-ho com en el cas anterior, usant que $\text{DistPare}(v) = 0$ si $v$ és l'arrel, i processant la resta de vèrtexos de menor a major distància a l'arrel, fent
+
 $$
 \text{DistPare}(v) = 1 + \max \left\\\{ \text{DistFill}(\text{pare}(v)), \text{DistPare}(\text{pare}(v)) \right\\\}
 $$
+
 El problema d'això és que si el camí més llarg des del pare de $v$ fins a una fulla passa per $v$, aleshores quan calculem $\text{DistPare}(v)$ estem anant de $v$ al pare, i llavors tornant a baixar cap a $v$. Això no ho volem permetre, ja que el camí estaria repetint vèrtexos.
 
 Per resoldre-ho, en el primer pas no només calculem la major distància des de cada vèrtex $v$ fins a una fulla ($\text{DistFill}(v)$), sinó que també ens guardem per quin fill de $v$ passa aquest camí ($\text{MillorFill}(v)$), i quina és la major distància des de $v$ a una fulla sense passar per $\text{MillorFill}(v)$ ($\text{SegonDistFill}(v)$).
